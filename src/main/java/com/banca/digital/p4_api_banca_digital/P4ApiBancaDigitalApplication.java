@@ -1,5 +1,9 @@
 package com.banca.digital.p4_api_banca_digital;
 
+import com.banca.digital.p4_api_banca_digital.dtos.ClienteDTO;
+import com.banca.digital.p4_api_banca_digital.dtos.CuentaActualDTO;
+import com.banca.digital.p4_api_banca_digital.dtos.CuentaAhorroDTO;
+import com.banca.digital.p4_api_banca_digital.dtos.CuentaBancariaDTO;
 import com.banca.digital.p4_api_banca_digital.entidades.*;
 import com.banca.digital.p4_api_banca_digital.enums.EstadoCuenta;
 import com.banca.digital.p4_api_banca_digital.enums.TipoOperacion;
@@ -32,12 +36,11 @@ public class P4ApiBancaDigitalApplication {
 	CommandLineRunner start(CuentaBancariaService cuentaBancariaService) {
 		return args -> {
 			Stream.of("Christian", "Julia", "Biaggio", "Lanudo").forEach(nombre -> {
-				Cliente cliente = new Cliente(); // Crea una nueva instancia de la clase Cliente // Crea un nuevo objeto Cliente para representar a un cliente
+				ClienteDTO cliente = new ClienteDTO(); //para trabajar con ClienteDTO // Crea un nuevo objeto Cliente para representar a un cliente
 				//Establece datos de los clientes
 				cliente.setNombre(nombre);
 				cliente.setEmail(nombre + "@gmail.com");
-				cuentaBancariaService.saveCliente(cliente);
-
+				cuentaBancariaService.saveClient(cliente);   //para trabajar con ClienteDTO
 			});
 
 			cuentaBancariaService.listClientes().forEach(cliente -> { //recorre la lista de cliente por cada cliente
@@ -45,13 +48,21 @@ public class P4ApiBancaDigitalApplication {
 					//crea una nueva cuenta actual a la cual se le agregan los datos
 					cuentaBancariaService.saveCuentaBancariaActual(cliente.getId(), Math.random() * 90000, 9000);
 					cuentaBancariaService.saveCuentaBancariaAhorro(cliente.getId(), 1200000, 5.5); //guarda un ahorro
-					List<CuentaBancaria> cuentaBancarias = cuentaBancariaService.listCuentasBancarias(); //lista las cuentas bancarias
+					List<CuentaBancariaDTO> cuentaBancarias = cuentaBancariaService.listCuentasBancarias(); //lista las cuentas bancarias
 
 					//recorre la lista de cuentaBancarias
-					for (CuentaBancaria cuentaBancaria : cuentaBancarias) {
+					for (CuentaBancariaDTO cuentaBancaria : cuentaBancarias) {
 						for (int i = 0; i < 10; i++) {
-							cuentaBancariaService.credit(cuentaBancaria.getId(), 10000 + Math.random() * 120000, "Credito");
-							cuentaBancariaService.debit(cuentaBancaria.getId(), 1000 + Math.random() * 9000, "Debito");
+							String cuentaId;
+
+							if(cuentaBancaria instanceof CuentaAhorroDTO){
+								cuentaId = ((CuentaAhorroDTO) cuentaBancaria).getId();
+							}
+							else {
+								cuentaId = ((CuentaActualDTO) cuentaBancaria).getId();
+							}
+							cuentaBancariaService.credit(cuentaId, 10000 + Math.random() * 120000, "Credito");
+							cuentaBancariaService.debit(cuentaId, 1000 + Math.random() * 9000, "Debito");
 						}
 					}
 				} catch (Exception e) {

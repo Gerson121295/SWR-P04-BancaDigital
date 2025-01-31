@@ -6,6 +6,7 @@ package com.banca.digital.p4_api_banca_digital.dtos;
 
 public class ClienteDTO {  //el mapeo de ClienteDTO se realiza en CuentaBancariaMapperImpl
 
+    //Atributos que se requiere de la Clase Cliente.
     private Long id;
     private String nombre;
     private String email;

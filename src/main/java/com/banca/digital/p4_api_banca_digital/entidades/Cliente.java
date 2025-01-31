@@ -18,8 +18,9 @@ public class Cliente {
     //el nuevo campo que contiene la relacion se crea en la clase a la que esta dirigida el Many en este caso es @OneToMany por lo tanto seria en CuentaBancaria que esta relacionada por cliente que seria de tipo Cliente lo que generaria la FK automaticamente el campo cliente_id que contiene la relacion entre estas 2 tablas
     //en la clase donde se encuentre el campo a mappear por mappedBy, Si no se usa @JoinColumn, Hibernate asignará un nombre predeterminado como cliente_id
     //mappedBy indica(que es la clase padre principal)
-    @OneToMany(mappedBy = "cliente") //mappedBy indica lo contrario en la otra clase CuentaBancaria(seria @ManyToOne "relacion seria bidireccional") que muchas cuentas bancarias le pertenecen al cliente
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) //WRITE_ONLY Asegura que al serializar un objeto Cliente a JSON (por ejemplo, en una respuesta de la API), no se incluirá la lista de cuentas bancarias asociadas. Solo los atributos de cliente, sin embargo, esa lista sí puede ser utilizada al recibir un JSON (deserialización) para mapear datos hacia un objeto Cliente.
+    // cascade = CascadeType.REMOVE permite que, al eliminar un cliente, también se eliminen sus cuentas bancarias y operaciones asociadas.
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.REMOVE) //mappedBy indica lo contrario en la otra clase CuentaBancaria(seria @ManyToOne "relacion seria bidireccional") que muchas cuentas bancarias le pertenecen al cliente
+    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY) //WRITE_ONLY Asegura que al serializar un objeto Cliente a JSON (por ejemplo, en una respuesta de la API), no se incluirá la lista de cuentas bancarias asociadas. Solo los atributos de cliente, sin embargo, esa lista sí puede ser utilizada al recibir un JSON (deserialización) para mapear datos hacia un objeto Cliente. //Cuando se usa DTO no es necesario
     private List<CuentaBancaria> cuentasBancarias; //una lista de todas las cuentas bancarias asociadas a un cliente.
 
 

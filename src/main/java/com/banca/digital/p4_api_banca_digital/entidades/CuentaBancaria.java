@@ -31,7 +31,7 @@ public class CuentaBancaria { //CuentaBancaria es una clase padre si se quiere h
 
     //Relacion bidireccional
     //Una cuenta bancaria tiene muchas operaciones en las cuentas, Establece LAZY cuando se llame aparecerá la lista
-    @OneToMany(mappedBy = "cuentaBancaria", fetch = FetchType.LAZY) //mappedBy indica que es la clase padre "dueña de la entidad" por lo tanto indica la relacion entre CuentaBancaria y OperacionCuenta se realizara mediante el atributo definido en OperacionCuenta llamado cuentaBancaria de tipo CuentaBancaria
+    @OneToMany(mappedBy = "cuentaBancaria", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY) //mappedBy indica que es la clase padre "dueña de la entidad" por lo tanto indica la relacion entre CuentaBancaria y OperacionCuenta se realizara mediante el atributo definido en OperacionCuenta llamado cuentaBancaria de tipo CuentaBancaria
     private List<OperacionCuenta> operacionesCuenta; //una lista de operacionesCuenta asociada a cuentaBancaria
 
 
